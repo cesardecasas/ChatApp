@@ -1,10 +1,11 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ErrorCard, Loader} from './ResponseHandlers'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import socket  from './socket'
 
 
 const Login = ({setAuthenticated, setCurrentUser})=>{
@@ -15,7 +16,8 @@ const Login = ({setAuthenticated, setCurrentUser})=>{
     const [validated, setValidated] = useState(false);
     const [error, setError] = useState(false)
     const [load, setLoad] = useState(false)
-    const client = axios.create({baseURL:'https://aniworld-api.herokuapp.com'})
+    const client = axios.create({baseURL:'http://localhost:3001'})
+
 
 
     const handleSubmit = async(event) => {
@@ -36,21 +38,26 @@ const Login = ({setAuthenticated, setCurrentUser})=>{
             }
 
             const login = await client.post('/api/user/login', body)
-            console.log(login.data)
             if(login.data.token){
                 localStorage.setItem('token', login.data.token)
                 setCurrentUser( {
                     userName:login.data.user.userName,
                     id:login.data.user.id
                 })
+                const User = login.data.user.userName
+                socket.auth = { User };
+                socket.connect();
                 setAuthenticated(true)
-                router.push('/')
+                router.push('/chat')
             }
             setLoad(false)
-        
-    
-        
       };
+
+        useEffect(()=>{
+            
+              
+              
+        },[])
 
     return(
         <div>

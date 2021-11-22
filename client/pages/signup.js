@@ -15,7 +15,7 @@ const Login = ()=>{
     const [Username, setUsername] = useState('')
     const [error, setError] = useState(false)
 
-    const client = axios.create({baseURL:'https://aniworld-api.herokuapp.com/'})
+    const client = axios.create({baseURL:'http://localhost:3001/'})
 
 
     const handleSubmit = async(event) => {
@@ -35,7 +35,7 @@ const Login = ()=>{
         }
         const registration = await client.post('api/user/register', inf)
         if(registration){
-            router.push('/login')
+            router.push('/')
         }
       };
 
