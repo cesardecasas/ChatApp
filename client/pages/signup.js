@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { ErrorCard} from '../components/ResponseHandlers'
 import axios from 'axios'
 import {useRouter} from 'next/router'
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-const Login = ()=>{
+
+const SignUp = ()=>{
 
     const router = useRouter()
 
@@ -39,6 +41,19 @@ const Login = ()=>{
         }
       };
 
+      const auth = getAuth();
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+        });
+
     return(
         <div>
             <section style={{width:'50%', marginLeft:'25%', border:'2px solid black', borderRadius:'1.5rem', marginTop:'13%', marginBottom:'11.5%',padding:'3%', boxShadow:'12px 12px 2px 1px rgba(0, 0, 255, .2)' }}>
@@ -67,4 +82,4 @@ const Login = ()=>{
 }
 
 
-export default Login
+export default SignUp

@@ -6,6 +6,8 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import socket  from './socket'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 
 
 const Login = ({setAuthenticated, setCurrentUser})=>{
@@ -18,6 +20,19 @@ const Login = ({setAuthenticated, setCurrentUser})=>{
     const [load, setLoad] = useState(false)
     const client = axios.create({baseURL:'http://localhost:3001'})
 
+
+
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+    });
 
 
     const handleSubmit = async(event) => {
