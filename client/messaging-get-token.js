@@ -1,19 +1,7 @@
-import '../styles/globals.css'
-import 'bootstrap/dist/css/bootstrap.css';
-import {useEffect, useState} from 'react'
-import socket from '../components/socket';
-import axios from 'axios';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getMessaging, getToken } from 'firebase/messaging'
+import { getMessaging, getToken } from "firebase/messaging";
 
-
-
-function MyApp({ Component, pageProps }) {
-  const [authenticated, setAuthenticated] = useState(false)
-  const [currentUser, setCurrentUser] = useState(null)
-  const client = axios.create({baseURL:'http://localhost:3001'})
+// Get registration token. Initially this makes a network call, once retrieved
+// subsequent calls to getToken will return from cache.
 
 const firebaseConfig = {
     apiKey: "AIzaSyBHEqWmzcByOQH_o9NRdeMnm0z0pTfcb_A",
@@ -42,13 +30,3 @@ getToken(messaging, { vapidKey: 'BPwPwhN1158VWK_I13LR8bWD9eNRO-Cic8mg1kJHEzs0pxO
   console.log('An error occurred while retrieving token. ', err);
   // ...
 });
-
-
-
-  useEffect(()=>{
-  })
-
-  return <Component setAuthenticated={setAuthenticated} setCurrentUser={setCurrentUser} currentUser={currentUser} authenticated={authenticated} {...pageProps} />
-}
-
-export default MyApp

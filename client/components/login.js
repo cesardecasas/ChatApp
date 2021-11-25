@@ -6,7 +6,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import socket  from './socket'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "firebase/auth";
 
 
 
@@ -19,20 +19,7 @@ const Login = ({setAuthenticated, setCurrentUser})=>{
     const [error, setError] = useState(false)
     const [load, setLoad] = useState(false)
     const client = axios.create({baseURL:'http://localhost:3001'})
-
-
-
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        // ...
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-    });
 
 
     const handleSubmit = async(event) => {
@@ -44,27 +31,22 @@ const Login = ({setAuthenticated, setCurrentUser})=>{
           event.stopPropagation();
         }
         setValidated(true);
-
-                
-
-            const body ={
-                email:email,
-                password:password
-            }
-
-            const login = await client.post('/api/user/login', body)
-            if(login.data.token){
-                localStorage.setItem('token', login.data.token)
-                setCurrentUser( {
-                    userName:login.data.user.userName,
-                    id:login.data.user.id
-                })
-                const User = login.data.user.userName
-                socket.auth = { User };
-                socket.connect();
-                setAuthenticated(true)
+            let fireBaseUser
+            signInWithEmailAndPassword(auth, email, password ).then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                setCurrentUser(user)
+                // ...
+            }).then(
+                setAuthenticated(true),
                 router.push('/chat')
-            }
+            )
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorMessage)
+            });
+
             setLoad(false)
       };
 

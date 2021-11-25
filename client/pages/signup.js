@@ -16,9 +16,7 @@ const SignUp = ()=>{
     const [validated, setValidated] = useState(false);
     const [Username, setUsername] = useState('')
     const [error, setError] = useState(false)
-
-    const client = axios.create({baseURL:'http://localhost:3001/'})
-
+    const auth = getAuth();
 
     const handleSubmit = async(event) => {
         event.preventDefault()
@@ -30,20 +28,8 @@ const SignUp = ()=>{
     
         setValidated(true);
 
-        const inf = {
-            email:email,
-            password:password,
-            userName:Username
-        }
-        const registration = await client.post('api/user/register', inf)
-        if(registration){
-            router.push('/')
-        }
-      };
-
-      const auth = getAuth();
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        const displayName = Username
+        createUserWithEmailAndPassword(auth, email, password, displayName).then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
             // ...
@@ -51,9 +37,14 @@ const SignUp = ()=>{
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            console.log(errorMessage)
             // ..
         });
+            router.push('/')
+        
+      };
 
+        
     return(
         <div>
             <section style={{width:'50%', marginLeft:'25%', border:'2px solid black', borderRadius:'1.5rem', marginTop:'13%', marginBottom:'11.5%',padding:'3%', boxShadow:'12px 12px 2px 1px rgba(0, 0, 255, .2)' }}>
